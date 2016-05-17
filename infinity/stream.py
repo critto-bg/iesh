@@ -532,10 +532,7 @@ class OverrideStream (MemoryStream):
         if len (obj) == 0:
             raise RuntimeError, name + ": not found in override!"
 
-        try:
-            obj = obj[index]
-        except IndexError:
-            obj = obj[0]
+        obj = obj[index]
 
         # this is performed for compatibility with export_object
         stream = FileStream ().open (obj['path'])
