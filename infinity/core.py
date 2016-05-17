@@ -513,10 +513,11 @@ def find_file (filename, type = None):
     return None
 
 def locate_override ():
-    dir = os.path.join (game_dir, "override")
+    for override in ["override", "Override"]:
+        dir = os.path.join (game_dir, override)
 
-    if (os.path.exists (dir)):
-        return dir
+        if (os.path.exists (dir)):
+            return dir
 
     return None
 
