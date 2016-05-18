@@ -144,7 +144,12 @@ class Stream (object):
         if offset is not None:
             self.seek (offset)
         v = self.read (4)
-        return struct.unpack ('<I', v)[0]
+        unpacked = struct.unpack ('<I', v)[0]
+
+        if (unpacked < (2**31-1) / 2):
+            return unpacked
+
+        return struct.unpack ('<i', v)[0]
 
     def write_dword (self, value, offset = None):
         # offset == None means "current offset" here
