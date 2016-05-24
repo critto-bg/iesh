@@ -416,9 +416,9 @@ class Format (object):
 
         if type == 'BYTE':
             size = 1
-        elif type in ['WORD', 'SWORD']:
+        elif type in ('WORD', 'SWORD'):
             size = 2
-        elif type in ['DWORD', 'SDWORD']:
+        elif type in ('DWORD', 'SDWORD'):
             size = 4
         elif type == 'POINT':
             size = 4
