@@ -73,12 +73,18 @@ def load_game (game_dir, chitin_file = None, dialog_file = None):
     core.strrefs.read (stream)
     stream.close ()
 
+    # detect game type
+    print("Detecting game type...")
+    core.game_type = core.detect_game_type ()
+
 ###################################################
 def save_state (filename):
     """Saves some core variables (especially keys and strrefs), so that they
     can be later loaded faster than from IE data files."""
     data = [core.game_dir, core.override, core.override_dir, core.chitin_file,
-            core.dialog_file, core.keys, core.strrefs, core.game_data_path ]
+            core.dialog_file, core.keys, core.strrefs, core.game_data_path,
+            core.game_type
+            ]
     fh = open (filename,  'w')
     cPickle.dump (data,  fh)
     fh.close ()
@@ -90,14 +96,21 @@ def restore_state (filename):
     fh = open (filename)
     data = cPickle.load (fh)
     fh.close ()
+
+    # FIXME: this is quite inelegant and should be refactored
     # old format from before override dir support
     if len(data) == 6:
         core.game_dir, core.chitin_file, core.dialog_file, core.keys, core.strrefs, core.game_data_path = data
         core.override_dir = core.locate_override ()
         if core.override_dir is not None:
             core.override = core.load_override ()
-    else:
+    # old format from before game type support
+    elif len(data) == 8:
         core.game_dir, core.override, core.override_dir, core.chitin_file, core.dialog_file, core.keys, core.strrefs, core.game_data_path = data
+        core.game_type = core.detect_game_type ()
+    else:
+        core.game_dir, core.override, core.override_dir, core.chitin_file, \
+        core.dialog_file, core.keys, core.strrefs, core.game_data_path, core.game_type = data
 
 ###################################################
 def find_objects (name, filetype = None):
