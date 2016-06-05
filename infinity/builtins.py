@@ -97,17 +97,13 @@ def restore_state (filename):
     data = cPickle.load (fh)
     fh.close ()
 
-    # FIXME: this is quite inelegant and should be refactored
-    # old format from before override dir support
-    if len(data) == 6:
+    # old format from before override dir & game type support
+    if len(data) < 9:
         core.game_dir, core.chitin_file, core.dialog_file, core.keys, core.strrefs, core.game_data_path = data
+        core.game_type = core.detect_game_type ()
         core.override_dir = core.locate_override ()
         if core.override_dir is not None:
             core.override = core.load_override ()
-    # old format from before game type support
-    elif len(data) == 8:
-        core.game_dir, core.override, core.override_dir, core.chitin_file, core.dialog_file, core.keys, core.strrefs, core.game_data_path = data
-        core.game_type = core.detect_game_type ()
     else:
         core.game_dir, core.override, core.override_dir, core.chitin_file, \
         core.dialog_file, core.keys, core.strrefs, core.game_data_path, core.game_type = data
